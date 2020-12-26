@@ -29,7 +29,7 @@ class AuthenticationController extends Controller
 
         $user = User::create([
             'email' => $input['email'],
-            'birth_date' => $input['birth_date'],
+            'birthdate' => date('Y-m-d',strtotime($input['birthdate'])),
             'gender' => $input['gender'],
             'password' => Hash::make($input['password'])
         ]);
@@ -50,20 +50,22 @@ class AuthenticationController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'response' => $validator->errors()
-            ], 400);
+                'errors' => $validator->errors()
+            ], 200);
         }
     
         $user = User::where('email', $request->email)->first();
     
         if (! $user || !Hash::check($request->password, $user->password)) {
             return response()->json([
-                'response' => [
+                'errors' => [
                     'email' => ['The provided credentials are incorrect.'],
                 ]
-            ], 400);
+            ], 200);
         }
     
-        return $user->createToken($user->email)->plainTextToken;
+        return response()->json([
+            'response' => $user->createToken($user->email)->plainTextToken
+        ], 200);
     }
 }

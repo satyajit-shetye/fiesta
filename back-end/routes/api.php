@@ -24,7 +24,17 @@ Route::group(['prefix' => '/auth'], function () {
 });
 
 // User
-Route::group(['prefix' => '/user'], function () {
-    Route::get('/logged-in-user', [UserController::class, 'loggedInUser']);
-    Route::put('/update-user-details', [UserController::class, 'updateUserDetails']);
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::group(['prefix' => '/user'], function () {
+        Route::get('/logged-in-user', [UserController::class, 'loggedInUser']);
+        Route::put('/update-user-details', [UserController::class, 'updateUserDetails']);
+    });
 });
+
+Route::get('/unauthorize', function (Request $request) {
+    return response()->json([
+        'errors' => [
+            'user' => 'Unauthorized user.'
+        ]
+    ], 401);
+})->name('unauthorize');
