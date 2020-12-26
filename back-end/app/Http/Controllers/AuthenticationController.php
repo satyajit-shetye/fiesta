@@ -39,7 +39,31 @@ class AuthenticationController extends Controller
         ]);
     }
 
-    function signin (){
-        return 'SignIn';
+    public function signin(Request $request) {
+
+        $input = $request->all();
+
+        $validator = Validator::make($input, [
+            'email' => ['required'],
+            'password' => ['required']
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'response' => $validator->errors()
+            ], 400);
+        }
+    
+        $user = User::where('email', $request->email)->first();
+    
+        if (! $user || !Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'response' => [
+                    'email' => ['The provided credentials are incorrect.'],
+                ]
+            ], 400);
+        }
+    
+        return $user->createToken($user->email)->plainTextToken;
     }
 }
