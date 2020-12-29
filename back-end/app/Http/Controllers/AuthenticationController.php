@@ -68,4 +68,11 @@ class AuthenticationController extends Controller
             'response' => $user->createToken($user->email)->plainTextToken
         ], 200);
     }
+
+    function logout(Request $request){
+        $request->user()->currentAccessToken()->delete();;
+        return response()->json([
+            'response' => 'User logged out successfully.'
+        ], 200);
+    }
 }

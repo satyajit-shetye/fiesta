@@ -25,6 +25,10 @@ Route::group(['prefix' => '/auth'], function () {
 
 // User
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::group(['prefix' => '/auth'], function () {
+        Route::get('/logout', [AuthenticationController::class, 'logout']);
+    });
+
     Route::group(['prefix' => '/user'], function () {
         Route::get('/logged-in-user', [UserController::class, 'loggedInUser']);
         Route::put('/update-user-details', [UserController::class, 'updateUserDetails']);
