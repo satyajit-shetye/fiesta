@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
 import { CategoryComponent } from './category.component';
-import { CategoryListComponent } from './category-list/category-list.component';
-import { AddOrEditCategoryComponent } from './add-or-edit-category/add-or-edit-category.component';
+import { CategoryListComponent } from './components/category-list/category-list.component';
+import { AddOrEditCategoryComponent } from './components/add-or-edit-category/add-or-edit-category.component';
 
 const routes: Routes = [
   {
