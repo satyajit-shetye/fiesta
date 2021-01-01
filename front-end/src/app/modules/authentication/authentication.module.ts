@@ -7,6 +7,7 @@ import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
   {
@@ -43,11 +44,13 @@ const routes: Routes = [
     AuthenticationComponent,
     RegisterComponent, 
     LoginComponent, 
-    ForgotPasswordComponent, ChangePasswordComponent
+    ForgotPasswordComponent, 
+    ChangePasswordComponent
   ],
   imports: [
     RouterModule.forChild(routes),
-    CommonModule
+    CommonModule,
+    ReactiveFormsModule
   ]
 })
 export class AuthenticationModule { }
