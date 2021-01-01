@@ -31,6 +31,12 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "./node_modules/font-awesome/css/font-awesome.min.css",
+              "src/assets/theme/font.css",
+              
+              "src/assets/theme/style.green.css",
+              "src/assets/theme/custom.css",
               "src/styles.scss"
             ],
             "scripts": []
