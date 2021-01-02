@@ -10,7 +10,10 @@
                     name="email" 
                     class="form-control"
                     formControlName="email"
-                    [ngClass]="{'is-invalid': registerForm.get('email')?.errors && isFormSubmitted}">
+                    [ngClass]="{'is-invalid': registerForm.get('email')?.errors && isFormSubmitted}"/>
+                <div class="invalid-feedback">
+                    Email ID is required.
+                </div>
             </div>
             <div class="form-group">
                 <label for="gender" class="label-material">Gender <span class="red">*</span></label>
@@ -24,6 +27,9 @@
                     <option value="M">Male</option>
                     <option value="F">Female</option>
                 </select>
+                <div class="invalid-feedback">
+                    Gender is required.
+                </div>
             </div>
             <div class="form-group">
                 <label for="birthDate" class="label-material">
@@ -35,6 +41,9 @@
                     class="form-control"
                     formControlName="birthDate" 
                     [ngClass]="{'is-invalid': registerForm.get('birthDate')?.errors && isFormSubmitted}"/>
+                <div class="invalid-feedback">
+                    Birth Date is required.
+                </div>
             </div>
             <div class="form-group">
                 <label for="password" class="label-material">Password <span class="red">*</span></label>
@@ -43,7 +52,10 @@
                     name="password" 
                     class="form-control"
                     formControlName="password"
-                    [ngClass]="{'is-invalid': registerForm.get('password')?.errors && isFormSubmitted}">
+                    [ngClass]="{'is-invalid': registerForm.get('password')?.errors && isFormSubmitted}"/>
+                <div class="invalid-feedback">
+                    Password is required.
+                </div>
             </div>
             <div class="form-group">
                 <label for="confirm-password" class="label-material">
@@ -54,7 +66,10 @@
                     name="confirmPassword" 
                     class="form-control"
                     formControlName="confirmPassword"
-                    [ngClass]="{'is-invalid': registerForm.get('confirmPassword')?.errors && isFormSubmitted}">
+                    [ngClass]="{'is-invalid': registerForm.get('confirmPassword')?.errors && isFormSubmitted}"/>
+                <div class="invalid-feedback">
+                    Confirm Password is required.
+                </div>
             </div>
             <button type="submit" class="btn btn-primary pull-right">Register</button>
         </form>

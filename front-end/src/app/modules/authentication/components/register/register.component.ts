@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { AuthenticationService } from '../../services/authentication.service';
 
 @Component({
   selector: 'app-register',
@@ -11,7 +12,7 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   isFormSubmitted: boolean;
 
-  constructor() {
+  constructor(private _authenticationService:AuthenticationService) {
     this.registerForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       gender: new FormControl('', [Validators.required]),
@@ -27,7 +28,15 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmitForm():void {
-    console.log(this.registerForm);
     this.isFormSubmitted = true;
+
+    if(this.registerForm.invalid){
+      return;
+    }
+
+    this._authenticationService.register(this.registerForm.value)
+    .subscribe(response => {
+
+    });
   }
 }

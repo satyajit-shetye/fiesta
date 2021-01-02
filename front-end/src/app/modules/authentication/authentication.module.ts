@@ -7,7 +7,8 @@ import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from '../shared/shared.module';
+import { AuthenticationService } from './services/authentication.service';
 
 const routes: Routes = [
   {
@@ -50,7 +51,10 @@ const routes: Routes = [
   imports: [
     RouterModule.forChild(routes),
     CommonModule,
-    ReactiveFormsModule
+    SharedModule
+  ],
+  providers:[
+    AuthenticationService
   ]
 })
 export class AuthenticationModule { }
