@@ -13,7 +13,7 @@ export class BaseApiService {
     return this._http.get<T>(this.baseApiUrl + url);
   }
 
-  post<T>(url:string, body: any) : Observable<T>{
+  protected post<T>(url:string, body: any) : Observable<T>{
     return this._http.post<T>(this.baseApiUrl + url, body);
   }
 

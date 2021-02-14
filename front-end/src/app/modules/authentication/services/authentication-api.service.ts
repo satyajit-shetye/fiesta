@@ -8,22 +8,26 @@ export class AuthenticationApiService extends BaseApiService{
 
   constructor( _http : HttpClient) {
     super(_http);
-    this.apiUrl = this.baseApiUrl + '/authentication';
+    this.apiUrl = '/auth';
   }
 
-  protected registerApi<T>(user:any) : Observable<T> {
+  protected register<T>(user:any) : Observable<T> {
     return this.post<T>(this.apiUrl + '/register', user);
   }
 
-  protected loginApi<T>(user:any) : Observable<T> {
+  protected login<T>(user:any) : Observable<T> {
     return this.post<T>(this.apiUrl + '/login', user);
   }
 
-  protected isEmailExistsApi<T>(user:any) : Observable<T> {
+  protected isEmailExists<T>(user:any) : Observable<T> {
     return this.post<T>(this.apiUrl + '/is-email-exists', user);
   }
 
-  protected changePasswordApi<T>(user:any) : Observable<T> {
+  protected changePassword<T>(user:any) : Observable<T> {
     return this.post<T>(this.apiUrl + '/change-password', user);
+  }
+
+  protected loginWithProviderApi<T>(user:any) : Observable<T> {
+    return this.post<T>(this.apiUrl + '/signin-with-provider', user);
   }
 }

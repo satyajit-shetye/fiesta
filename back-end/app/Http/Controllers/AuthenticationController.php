@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthenticationController extends Controller
 {
-    function signup (Request $request){
+    public function signup (Request $request){
         $input = $request->all();
 
         $validator = Validator::make($input, [
@@ -69,7 +69,27 @@ class AuthenticationController extends Controller
         ], 200);
     }
 
-    function logout(Request $request){
+    public function signinWithProvider(Request $request){
+
+        $input = $request->all();
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            $user = User::create([
+                'email' => $input['email'],
+                'first_name' => $input['first_name'],
+                'last_name' => $input['last_name'],
+                'provider' => $input['provider'],
+                'provider_user_id' => $input['provider_user_id'],
+            ]);
+        }
+        return response()->json([
+            'response' => $user->createToken($user->email)->plainTextToken
+        ]);
+    }
+
+    public function logout(Request $request){
         $request->user()->currentAccessToken()->delete();;
         return response()->json([
             'response' => 'User logged out successfully.'
