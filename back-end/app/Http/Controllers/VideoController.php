@@ -19,9 +19,9 @@ class VideoController extends Controller
 
         $searchText = Route::current()->parameter('search') ? Route::current()->parameter('search') : '';
 
-        //$videoList = $this->getYTVideoList($request, $searchText);
+        $videoList = $this->getYTVideoList($request, $searchText);
 
-        $videoList = $this->getVideoList($request, $searchText);
+        //$videoList = $this->getVideoList($request, $searchText);
 
         return response()->json([
             'response' => $videoList
@@ -150,7 +150,7 @@ class VideoController extends Controller
 
         while (!$isAllVideosFetched) {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer 2f465678757a430ab50ef092d765c332'
+                'Authorization' => 'Bearer '
             ])->get('https://api.vimeo.com/users/20619244/videos?per_page=100&page=' . $pageNumber . '&query=' . $searchText . '&fields=name,description,resource_key,privacy.view,files.link,pictures.sizes.0.link')->json();
 
             if (isset($response['data'])) {
@@ -186,7 +186,7 @@ class VideoController extends Controller
         $videoList = [];
         $index = 0;
 
-        $response = Http::withHeaders([])->get('https://www.googleapis.com/youtube/v3/search?q=' . $searchText . '&part=snippet&maxResults=10&type=video&key=AIzaSyBT8qn_T4pOhulFjTMqVz_MnZ_Ih3_AgCY')->json();
+        $response = Http::withHeaders([])->get('https://www.googleapis.com/youtube/v3/search?q=' . $searchText . '&part=snippet&maxResults=10&type=video&key=')->json();
 
         if (isset($response['items'])) {
             foreach ($response['items'] as $video) {
