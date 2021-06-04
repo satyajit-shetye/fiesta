@@ -2,45 +2,53 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DashboardPlaylist;
+use App\Models\DashboardVideo;
+use App\Models\RecentVideo;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
-use App\Models\Playlist;
 
 class PlaylistController extends Controller
 {
-    function getPlaylists(Request $request){
-
+    function getPlaylists(Request $request)
+    {
         $userId = $request->user()->id;
 
-        $playlists = Playlist::where('user_id', $userId)
-        ->orderBy('updated_at')
-        ->get();
+        $playlists = DashboardPlaylist::where('user_id', $userId)
+            ->orderBy('updated_at')
+            ->get();
+
+        foreach ($playlists as &$playlist) {
+            $playlist['background_url'] = asset($playlist['background_url']);
+        }
 
         return response()->json([
             'response' => $playlists
         ]);
     }
 
-    function getPlaylistById(Request $request) {
+    function getPlaylistById(Request $request)
+    {
         $userId = $request->user()->id;
 
         $playlistId = Route::current()->parameter('id');
 
         $userId = $request->user()->id;
 
-        $playlists = Playlist::where([
+        $playlists = DashboardPlaylist::where([
             ['id', '=', $playlistId],
             ['user_id', '=', $userId]
         ])
-        ->first();
+            ->first();
 
         return response()->json([
             'response' => $playlists
         ]);
     }
 
-    function addPlaylist(Request $request){
+    function addPlaylist(Request $request)
+    {
         $userId = $request->user()->id;
 
         $input = $request->all();
@@ -54,12 +62,11 @@ class PlaylistController extends Controller
                 'errors' => $validator->errors()
             ]);
         }
- 
-        $playlist = Playlist::create([
+
+        $playlist = DashboardPlaylist::create([
             'name' => $input['name'],
-            'description' => array_key_exists('description',$input) ? $input['description'] : null,
-            'image_url' => array_key_exists('imageUrl',$input) ? $input['imageUrl'] : null,
-            'user_id' => $userId
+            'user_id' => $userId,
+            'dashboard_category_id' => 3
         ]);
 
         return response()->json([
@@ -67,10 +74,8 @@ class PlaylistController extends Controller
         ]);
     }
 
-    function updatePlaylist(Request $request){
-
-        $userId = $request->user()->id;
-
+    function updatePlaylist(Request $request)
+    {
         $input = $request->all();
 
         $validator = Validator::make($input, [
@@ -84,17 +89,15 @@ class PlaylistController extends Controller
             ]);
         }
 
-        $playlist = Playlist::find($input['id']);
+        $playlist = DashboardPlaylist::find($input['id']);
 
-        if( is_null($playlist) ){
+        if (is_null($playlist)) {
             return response()->json([
                 'error' => 'Playlist not found.'
-            ]);    
+            ]);
         }
-        
+
         $playlist->name = $input['name'];
-        $playlist->description = $input['description'];
-        $playlist->image_url = $input['imageUrl'];
         $playlist->save();
 
         return response()->json([
@@ -102,20 +105,30 @@ class PlaylistController extends Controller
         ]);
     }
 
-    function deletePlaylist(Request $request){
-        $userId = $request->user()->id;
-
+    function deletePlaylist(Request $request)
+    {
         $playlistId = Route::current()->parameter('id');
 
-        $playlist = Playlist::find($playlistId);
+        $playlist = DashboardPlaylist::find($playlistId);
 
-        if( is_null($playlist) ){
+        if (is_null($playlist)) {
             return response()->json([
                 'error' => 'Playlist not found.'
-            ]);    
+            ]);
         }
 
-        Playlist::destroy($playlistId);
+        $videoList = DashboardVideo::where('dashboard_playlist_id', '=', $playlistId)
+        ->get();
+
+        foreach($videoList as $video){
+            RecentVideo::where('dashboard_video_id', '=', $video['id'])
+            ->delete();
+        }
+
+        DashboardVideo::where('dashboard_playlist_id', '=', $playlistId)
+            ->delete();
+
+        DashboardPlaylist::destroy($playlistId);
 
         return response()->json([
             'response' => $playlist

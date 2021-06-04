@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthenticationController extends Controller
 {
-    public function signup (Request $request){
+    public function signup(Request $request)
+    {
         $input = $request->all();
 
         $validator = Validator::make($input, [
@@ -17,7 +18,7 @@ class AuthenticationController extends Controller
             'password' => ['required', 'string'],
             'birthdate' => ['required', 'date'],
             'gender' => ['required', 'boolean'],
-        ],$messages = [
+        ], $messages = [
             'boolean' => 'The :attribute field is invalid.',
         ]);
 
@@ -29,7 +30,7 @@ class AuthenticationController extends Controller
 
         $user = User::create([
             'email' => $input['email'],
-            'birthdate' => date('Y-m-d',strtotime($input['birthdate'])),
+            'birthdate' => date('Y-m-d', strtotime($input['birthdate'])),
             'gender' => $input['gender'],
             'password' => Hash::make($input['password'])
         ]);
@@ -39,7 +40,8 @@ class AuthenticationController extends Controller
         ]);
     }
 
-    public function signin(Request $request) {
+    public function signin(Request $request)
+    {
 
         $input = $request->all();
 
@@ -53,23 +55,24 @@ class AuthenticationController extends Controller
                 'errors' => $validator->errors()
             ], 200);
         }
-    
+
         $user = User::where('email', $request->email)->first();
-    
-        if (! $user || !Hash::check($request->password, $user->password)) {
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
                 'errors' => [
                     'email' => ['The provided credentials are incorrect.'],
                 ]
             ], 200);
         }
-    
+
         return response()->json([
             'response' => $user->createToken($user->email)->plainTextToken
         ], 200);
     }
 
-    public function signinWithProvider(Request $request){
+    public function signinWithProvider(Request $request)
+    {
 
         $input = $request->all();
 
@@ -83,14 +86,31 @@ class AuthenticationController extends Controller
                 'provider' => $input['provider'],
                 'provider_user_id' => $input['provider_user_id'],
             ]);
+
+            return response()->json([
+                'response' => $user->createToken($user->email)->plainTextToken
+            ]);
+        } else if (
+            $user->provider
+            && $user->provider === $input['provider']
+            && $user->provider_user_id
+            && $user->provider_user_id === $input['provider_user_id']
+        ) {
+            return response()->json([
+                'response' => $user->createToken($user->email)->plainTextToken
+            ]);
+        } else {
+            return response()->json([
+                'errors' => [
+                    'provider' => ['The provided credentials are incorrect.'],
+                ]
+            ], 200);
         }
-        return response()->json([
-            'response' => $user->createToken($user->email)->plainTextToken
-        ]);
     }
 
-    public function logout(Request $request){
-        $request->user()->currentAccessToken()->delete();;
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
         return response()->json([
             'response' => 'User logged out successfully.'
         ], 200);

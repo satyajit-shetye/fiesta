@@ -13,7 +13,8 @@ class Playlist extends Model
         'name',
         'description',
         'image_url',
-        'user_id'
+        'user_id',
+        'is_subscribed'
     ];
 
     protected $hidden = [
